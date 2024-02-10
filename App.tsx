@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, FlatList, Text } from 'react-native';
-import { styles } from './AppStyles';
+import { SafeAreaView, FlatList, StyleSheet } from 'react-native';
+import GridItem from './GridItem'; // GridItemコンポーネントをインポート
 import { CategoryItem, Category, BbsMenu } from './types';
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     fetch('https://menu.5ch.net/bbsmenu.json')
       .then(response => response.json())
-      .then((data: BbsMenu) => { // ここでdataの型をBbsMenuにキャスト
+      .then((data: BbsMenu) => {
         const categoryNames: Category[] = data.menu_list.map((item: CategoryItem) => ({
           id: item.category_number,
           name: item.category_name,
@@ -23,13 +23,31 @@ const App = () => {
     <SafeAreaView style={styles.container}>
       <FlatList
         data={categories}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <Text style={styles.item}>{item.name}</Text>
+        renderItem={({ item, index }) => (
+          <GridItem
+            name={item.name}
+            isFirstRow={index < 2} // 2列表示のため、最初の2アイテムが最初の行になる
+            isLeftCell={index % 2 === 0} // 0と偶数インデックスが左側のセル
+          />
         )}
+        keyExtractor={item => item.id}
+        // 2列で表示
+        numColumns={2}
+        // グリッドのアイテム間のスペースを調整するために必要
+        columnWrapperStyle={styles.columnWrapper}
       />
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 20,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between',
+  },
+});
 
 export default App;
