@@ -13,6 +13,7 @@ const App = () => {
         const categoryNames: Category[] = data.menu_list.map((item: CategoryItem) => ({
           id: item.category_number,
           name: item.category_name,
+          content: item.category_content,
         }));
         setCategories(categoryNames);
       })
