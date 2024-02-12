@@ -1,23 +1,27 @@
 // GridItem.tsx
 
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface GridItemProps {
   name: string;
   isFirstRow: boolean; // 最初の行かどうか
   isLeftCell: boolean; // 左側のセルかどうか
+  onPress: () => void; // タップ時のイベントハンドラ
 }
 
-const GridItem: React.FC<GridItemProps> = ({ name, isFirstRow, isLeftCell }) => {
+const GridItem: React.FC<GridItemProps> = ({ name, isFirstRow, isLeftCell, onPress }) => {
   return (
-    <View style={[
-      styles.item,
-      isFirstRow && styles.firstRow,
-      isLeftCell && styles.leftCell,
-    ]}>
+    <TouchableOpacity
+      style={[
+        styles.item,
+        isFirstRow && styles.firstRow,
+        isLeftCell && styles.leftCell,
+      ]}
+      onPress={onPress} // TouchableOpacityを使用してonPressを適用
+    >
       <Text style={styles.itemText}>{name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
