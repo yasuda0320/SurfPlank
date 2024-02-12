@@ -12,13 +12,13 @@ export interface CategoryContent {
 export interface CategoryItem {
   category_number: string;
   category_name: string;
-  category_content: CategoryContent[]; // 新しいフィールドを追加
+  category_content: CategoryContent[];
 }
 
 export interface Category {
   id: string;
   name: string;
-  content?: CategoryContent[]; // オプショナルで追加も検討できます
+  content?: CategoryContent[];
 }
 
 export interface BbsMenu {
