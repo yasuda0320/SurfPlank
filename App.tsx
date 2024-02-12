@@ -1,6 +1,8 @@
+// App.tsx
+
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, FlatList, StyleSheet } from 'react-native';
-import GridItem from './GridItem'; // GridItemコンポーネントをインポート
+import GridItem from './GridItem';
 import { CategoryItem, Category, BbsMenu } from './types';
 
 const App = () => {
