@@ -21,7 +21,16 @@ const App = () => {
         }}
       >
         <Stack.Screen name="CategoryList" component={CategoryListScreen} options={{ title: 'カテゴリ一覧' }} />
-        <Stack.Screen name="BoardList" component={BoardListScreen} options={{ title: '板一覧' }} />
+        <Stack.Screen
+          name="BoardList"
+          component={BoardListScreen}
+          options={{
+            title: '板一覧',
+            gestureEnabled: true, // スワイプジェスチャーを有効にする
+            gestureDirection: 'horizontal', // 左から右へのスワイプで戻る
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // iOSスタイルの遷移アニメーション
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
