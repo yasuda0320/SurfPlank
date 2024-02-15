@@ -7,6 +7,7 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 import CategoryListScreen from './CategoryListScreen';
 import BoardListScreen from './BoardListScreen';
 import { RootStackParamList } from './types';
+import ThreadListScreen from './ThreadListScreen.tsx';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,7 @@ const App = () => {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // iOSスタイルの遷移アニメーション
           }}
         />
+        <Stack.Screen name="ThreadList" component={ThreadListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

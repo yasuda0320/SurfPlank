@@ -2,24 +2,25 @@
 
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import GridItem from './GridItem';
 import { RootStackParamList } from './types';
 
 type BoardListScreenRouteProp = RouteProp<RootStackParamList, 'BoardList'>;
+// navigation プロパティの型を追加
+type BoardListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'BoardList'>;
 
 interface BoardListScreenProps {
   route: BoardListScreenRouteProp;
+  // navigation プロパティを追加
+  navigation: BoardListScreenNavigationProp;
 }
 
+// useNavigation フックを使用して、navigation オブジェクトを取得
 const BoardListScreen: React.FC<BoardListScreenProps> = ({ route }) => {
+  const navigation = useNavigation<BoardListScreenNavigationProp>();
   const { categoryContent } = route.params;
-
-  // GridItemのonPressプロパティに渡すダミー関数
-  // 実際のアプリでは、適切なアクションを実装してください
-  const handlePress = () => {
-    console.log('Item pressed');
-  };
 
   return (
     <View style={styles.container}>
@@ -30,7 +31,7 @@ const BoardListScreen: React.FC<BoardListScreenProps> = ({ route }) => {
             name={item.board_name}
             isFirstRow={index < 2} // 最初の2アイテムで最初の行
             isLeftCell={index % 2 === 0} // 偶数インデックスが左側のセル
-            onPress={handlePress} // 実際には適切な処理を実装する
+            onPress={() => navigation.navigate('ThreadList', { item })}
           />
         )}
         keyExtractor={(_, index) => `board-${index}`}

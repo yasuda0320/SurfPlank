@@ -26,6 +26,7 @@ export interface BbsMenu {
 }
 
 export type RootStackParamList = {
-  CategoryList: undefined; // 他のスクリーンの定義があればここに追加
-  BoardList: { categoryContent: CategoryContent[] }; // 必要に応じて型を修正
+  CategoryList: undefined;
+  BoardList: { categoryContent: CategoryContent[] };
+  ThreadList: { item: CategoryContent }; // ThreadListへの遷移に必要なパラメータの型を追加
 };
