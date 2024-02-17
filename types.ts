@@ -30,3 +30,8 @@ export type RootStackParamList = {
   BoardList: { categoryContent: CategoryContent[] };
   ThreadList: { item: CategoryContent }; // ThreadListへの遷移に必要なパラメータの型を追加
 };
+
+export interface ThreadInfo {
+  datFileName: string; // .datファイル名
+  title: string; // スレッドのタイトル
+}
