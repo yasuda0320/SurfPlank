@@ -27,8 +27,8 @@ export interface BbsMenu {
 
 export type RootStackParamList = {
   CategoryList: undefined;
-  BoardList: { categoryContent: CategoryContent[] };
-  ThreadList: { item: CategoryContent }; // ThreadListへの遷移に必要なパラメータの型を追加
+  BoardList: { categoryContent: CategoryContent[]; categoryName: string }; // categoryNameを追加
+  ThreadList: { item: CategoryContent };
 };
 
 export interface ThreadInfo {

@@ -1,26 +1,26 @@
 // BoardListScreen.tsx
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import GridItem from './GridItem';
 import { RootStackParamList } from './types';
 
 type BoardListScreenRouteProp = RouteProp<RootStackParamList, 'BoardList'>;
-// navigation プロパティの型を追加
-type BoardListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'BoardList'>;
 
 interface BoardListScreenProps {
   route: BoardListScreenRouteProp;
-  // navigation プロパティを追加
-  navigation: BoardListScreenNavigationProp;
 }
 
-// useNavigation フックを使用して、navigation オブジェクトを取得
 const BoardListScreen: React.FC<BoardListScreenProps> = ({ route }) => {
-  const navigation = useNavigation<BoardListScreenNavigationProp>();
-  const { categoryContent } = route.params;
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'BoardList'>>();
+  const { categoryContent, categoryName } = route.params; // categoryNameを受け取る
+
+  // コンポーネントがマウントされた時にタイトルを設定
+  useEffect(() => {
+    navigation.setOptions({ title: categoryName }); // 受け取ったカテゴリ名をタイトルとして設定
+  }, [categoryName, navigation]);
 
   return (
     <View style={styles.container}>
@@ -29,8 +29,8 @@ const BoardListScreen: React.FC<BoardListScreenProps> = ({ route }) => {
         renderItem={({ item, index }) => (
           <GridItem
             name={item.board_name}
-            isFirstRow={index < 2} // 最初の2アイテムで最初の行
-            isLeftCell={index % 2 === 0} // 偶数インデックスが左側のセル
+            isFirstRow={index < 2}
+            isLeftCell={index % 2 === 0}
             onPress={() => navigation.navigate('ThreadList', { item })}
           />
         )}

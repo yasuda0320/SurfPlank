@@ -36,7 +36,10 @@ const CategoryListScreen = () => {
             name={item.name}
             isFirstRow={false} // このプロパティはGridItem内で条件付きスタイルに使用されますが、この例では使用していません
             isLeftCell={false} // 同上
-            onPress={() => navigation.navigate('BoardList', { categoryContent: item.content ?? [] })}
+            onPress={() => navigation.navigate('BoardList', {
+              categoryContent: item.content ?? [],
+              categoryName: item.name, // categoryNameを渡す
+            })}
           />
         )}
         keyExtractor={item => item.id}

@@ -25,7 +25,6 @@ const App = () => {
           name="BoardList"
           component={BoardListScreen}
           options={{
-            title: '板一覧',
             gestureEnabled: true,
             gestureDirection: 'horizontal',
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
