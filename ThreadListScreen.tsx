@@ -6,6 +6,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList, ThreadInfo } from './types';
 import GridItem from './GridItem'; // GridItemのインポートを確認
 import encoding from 'encoding-japanese';
+import he from 'he';
 
 type ThreadListScreenRouteProp = RouteProp<RootStackParamList, 'ThreadList'>;
 
@@ -26,9 +27,13 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
         const resultArray = encoding.convert(uint8Array, 'UNICODE');
         const decodedText = encoding.codeToString(resultArray);
 
-        const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n');
+        const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n').filter(Boolean);
         const threadInfos = lines.map(line => {
-          const [datFileName, title] = line.split('<>');
+          const parts = line.split('<>');
+          const datFileName = parts[0];
+          // parts[1]がundefinedの場合は空文字列''を使用
+          const rawTitle = parts[1] || '';
+          const title = he.decode(rawTitle); // HTMLエンティティをデコード
           return { datFileName, title };
         }).filter(thread => thread.title && thread.datFileName);
 
