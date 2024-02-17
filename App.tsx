@@ -6,8 +6,8 @@ import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/
 
 import CategoryListScreen from './CategoryListScreen';
 import BoardListScreen from './BoardListScreen';
+import ThreadListScreen from './ThreadListScreen';
 import { RootStackParamList } from './types';
-import ThreadListScreen from './ThreadListScreen.tsx';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -17,19 +17,18 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="CategoryList"
         screenOptions={{
-          // 画面遷移アニメーションのカスタマイズ
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
-        <Stack.Screen name="CategoryList" component={CategoryListScreen} options={{ title: 'カテゴリ一覧' }} />
+        <Stack.Screen name="CategoryList" component={CategoryListScreen} />
         <Stack.Screen
           name="BoardList"
           component={BoardListScreen}
           options={{
             title: '板一覧',
-            gestureEnabled: true, // スワイプジェスチャーを有効にする
-            gestureDirection: 'horizontal', // 左から右へのスワイプで戻る
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS, // iOSスタイルの遷移アニメーション
+            gestureEnabled: true,
+            gestureDirection: 'horizontal',
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         />
         <Stack.Screen name="ThreadList" component={ThreadListScreen} />

@@ -12,6 +12,8 @@ const CategoryListScreen = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   useEffect(() => {
+    // ナビゲーションオプションを動的に設定
+    navigation.setOptions({ title: '5ちゃんねる' });
     fetch('https://menu.5ch.net/bbsmenu.json')
       .then(response => response.json())
       .then((data: BbsMenu) => {
@@ -23,7 +25,7 @@ const CategoryListScreen = () => {
         setCategories(categoryNames);
       })
       .catch(error => console.error(error));
-  }, []);
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
