@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native'; // useNavigationをインポート
 import { RootStackParamList, ThreadInfo } from './types';
-import GridItem from './GridItem'; // GridItemのインポートを確認
+import GridItem from './GridItem';
 import encoding from 'encoding-japanese';
 import he from 'he';
 
@@ -17,8 +17,10 @@ interface ThreadListScreenProps {
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
   const [threads, setThreads] = useState<ThreadInfo[]>([]);
   const { item } = route.params;
+  const navigation = useNavigation(); // useNavigationフックを使用
 
   useEffect(() => {
+    navigation.setOptions({ title: item.board_name }); // item.board_nameをタイトルとして設定
     const fetchSubjectTxt = async () => {
       try {
         const response = await fetch(`${item.url}subject.txt`);
@@ -47,7 +49,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
     (async () => {
       await fetchSubjectTxt();
     })();
-  }, [item.url]);
+  }, [item, navigation]); // 依存配列にitemとnavigationを追加
 
   return (
     <ScrollView style={styles.container}>
