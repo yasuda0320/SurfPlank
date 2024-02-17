@@ -1,11 +1,11 @@
 // ThreadListScreen.tsx
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { RouteProp } from '@react-navigation/native'; // RoutePropのインポート
-import { RootStackParamList } from './types'; // RootStackParamListのインポート
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, ScrollView } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from './types';
+import encoding from 'encoding-japanese';
 
-// RootStackParamListを使用してThreadListScreenのroute propの型を定義
 type ThreadListScreenRouteProp = RouteProp<RootStackParamList, 'ThreadList'>;
 
 interface ThreadListScreenProps {
@@ -13,23 +13,42 @@ interface ThreadListScreenProps {
 }
 
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
-  // paramsからitemを直接取り出す
+  const [subjectList, setSubjectList] = useState<string>('Loading...');
   const { item } = route.params;
 
+  useEffect(() => {
+    const fetchSubjectTxt = async () => {
+      try {
+        const response = await fetch(`${item.url}subject.txt`);
+        const arrayBuffer = await response.arrayBuffer();
+        const uint8Array = new Uint8Array(arrayBuffer);
+        // UNICODEへの変換を指示
+        const resultArray = encoding.convert(uint8Array, 'UNICODE');
+        // 変換された数値配列を文字列に変換
+        const decodedText = encoding.codeToString(resultArray);
+        setSubjectList(decodedText);
+      } catch (error) {
+        console.error('Failed to fetch or convert subject.txt', error);
+        setSubjectList('Failed to load content.');
+      }
+    };
+
+    fetchSubjectTxt();
+  }, [item.url]);
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text>Board Name: {item.board_name}</Text>
       <Text>URL: {item.url}</Text>
-      {/* 必要に応じて他のitemプロパティを表示 */}
-    </View>
+      <Text>{subjectList}</Text>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
   },
 });
 
