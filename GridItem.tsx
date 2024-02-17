@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 0.5,
     borderColor: '#ddd',
-    alignItems: 'center',
     justifyContent: 'center',
-    height: 100 / 2, // 高さを1/2に調整
+    padding: 15, // セルのパディングを15に設定
     borderBottomWidth: 0.5, // 下側のグリッド線はすべてのセルに引く
+    // heightプロパティを削除して自動高さ調整を許可
   },
   firstRow: {
     borderTopWidth: 0.5, // 最初の行のみ上側にグリッド線
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
+    textAlign: 'left', // テキストを左寄せに設定
   },
 });
 
