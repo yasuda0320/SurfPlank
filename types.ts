@@ -35,3 +35,11 @@ export interface ThreadInfo {
   datFileName: string; // .datファイル名
   title: string; // スレッドのタイトル
 }
+
+export interface ResponseContent {
+  authorName: string;
+  email?: string; // Optional, as not all posts will include an email address
+  dateIdBe: string; // A string that combines date, ID, and BE identifier, which can be parsed further if needed
+  content: string;
+  threadTitle?: string; // Optional, only present in the first post of a thread
+}
