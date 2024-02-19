@@ -3,6 +3,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import { Platform } from 'react-native';
 
 import CategoryListScreen from './CategoryListScreen';
 import BoardListScreen from './BoardListScreen';
@@ -17,19 +18,16 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="CategoryList"
         screenOptions={{
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          // Use the forHorizontalIOS interpolator for a smoother swipe gesture experience
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          // Adjust gesture response distance if needed, especially for larger devices
+          gestureResponseDistance: Platform.OS === 'android' ? 120 : 100,
         }}
       >
         <Stack.Screen name="CategoryList" component={CategoryListScreen} />
-        <Stack.Screen
-          name="BoardList"
-          component={BoardListScreen}
-          options={{
-            gestureEnabled: true,
-            gestureDirection: 'horizontal',
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          }}
-        />
+        <Stack.Screen name="BoardList" component={BoardListScreen} />
         <Stack.Screen name="ThreadList" component={ThreadListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
