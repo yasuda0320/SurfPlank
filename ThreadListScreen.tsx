@@ -26,7 +26,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
         const response = await fetch(`${item.url}subject.txt`);
         const arrayBuffer = await response.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        const resultArray = encoding.convert(uint8Array, 'UNICODE');
+        const resultArray = encoding.convert(uint8Array, 'UNICODE', 'SJIS');
         const decodedText = encoding.codeToString(resultArray);
 
         const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n').filter(Boolean);
