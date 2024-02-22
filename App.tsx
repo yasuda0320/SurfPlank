@@ -8,6 +8,7 @@ import { Platform } from 'react-native';
 import CategoryListScreen from './CategoryListScreen';
 import BoardListScreen from './BoardListScreen';
 import ThreadListScreen from './ThreadListScreen';
+import ResponseListScreen from './ResponseListScreen';
 import { RootStackParamList } from './types';
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -29,6 +30,7 @@ const App = () => {
         <Stack.Screen name="CategoryList" component={CategoryListScreen} />
         <Stack.Screen name="BoardList" component={BoardListScreen} />
         <Stack.Screen name="ThreadList" component={ThreadListScreen} />
+        <Stack.Screen name="ResponseList" component={ResponseListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

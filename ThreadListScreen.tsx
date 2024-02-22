@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
-import { RouteProp, useNavigation } from '@react-navigation/native'; // useNavigationをインポート
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, ThreadInfo } from './types';
 import GridItem from './GridItem';
 import encoding from 'encoding-japanese';
 import he from 'he';
 
 type ThreadListScreenRouteProp = RouteProp<RootStackParamList, 'ThreadList'>;
+type ThreadListScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 
 interface ThreadListScreenProps {
   route: ThreadListScreenRouteProp;
@@ -17,7 +19,7 @@ interface ThreadListScreenProps {
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
   const [threads, setThreads] = useState<ThreadInfo[]>([]);
   const { item } = route.params;
-  const navigation = useNavigation(); // useNavigationフックを使用
+  const navigation = useNavigation<ThreadListScreenNavigationProp>();
 
   useEffect(() => {
     navigation.setOptions({ title: item.board_name }); // item.board_nameをタイトルとして設定
@@ -59,7 +61,10 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           name={thread.title}
           isFirstRow={index === 0}
           isLeftCell={false} // 1行に1カラムのため、常にfalse
-          onPress={() => {/* スレッド選択時の動作 */}}
+          onPress={() => navigation.navigate('ResponseList', {
+            boardUrl: item.url, // 板のURL
+            datFileName: thread.datFileName, // 選択されたスレッドのdatファイル名
+          })}
         />
       ))}
     </ScrollView>
