@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList, ResponseContent } from './types';
 import encoding from 'encoding-japanese';
+import he from 'he';
 
 type ResponseListRouteProp = RouteProp<RootStackParamList, 'ResponseList'>;
 
@@ -30,12 +31,19 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
         // レスポンス内容の解析
         const parsedResponses = lines.map(line => {
           const parts = line.split('<>');
-          // ResponseContent の形式に従ってデータを構築
+          // <b>タグを削除してからauthorNameのHTMLエンティティをデコード
+          const authorName = he.decode(parts[0].replace(/<\/?b>/g, ''));
+          // contentの加工: <br>を改行に置き換え、デコード後に各行の先頭と末尾のスペースを削除
+          const contentLines = he.decode(parts[3].replace(/<br>/g, '\n'))
+            .split('\n')
+            .map(contentLine => contentLine.replace(/^ | $/g, '')); // 先頭と末尾のスペースを削除
+          const processedContent = contentLines.join('\n');
+
           return {
-            authorName: parts[0],
-            email: parts[1],
-            dateIdBe: parts[2],
-            content: parts[3],
+            authorName: authorName,
+            email: parts[1], // emailはデコード不要
+            dateIdBe: parts[2], // dateIdBeはデコード不要
+            content: processedContent, // contentのHTMLエンティティをデコード
             // threadTitleはレス一覧には含まれないため、ここでは扱わない
           };
         });
@@ -74,13 +82,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
   },
   authorName: {
-    fontWeight: 'bold',
+    fontSize: 12, // 少し小さめのサイズ
   },
   dateIdBe: {
-    fontStyle: 'italic',
+    fontSize: 12, // 少し小さめのサイズ
   },
   content: {
     marginTop: 5,
+    fontSize: 16,
+    fontWeight: 'bold', // コンテンツにボールドを指定
   },
 });
 
