@@ -9,4 +9,4 @@ React Nativeでモバイルアプリを開発しています。
 - スワイプでの前画面への遷移
 
 ![](https://storage.googleapis.com/zenn-user-upload/5b80ed4375ff-20240217.gif)
-![](https://storage.googleapis.com/zenn-user-upload/afaa9de6065f-20240223.gif)
+![](https://storage.googleapis.com/zenn-user-upload/42a806c0a1ce-20240223.gif)
