@@ -1,3 +1,5 @@
+// ResponseListScreen.tsx
+
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
@@ -57,10 +59,14 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
     <ScrollView style={styles.container}>
       {responses.map((response, index) => (
         <View key={index} style={styles.response}>
-          {/* レス番号、authorName、email、dateIdBeを同じ行に表示 */}
-          <Text style={styles.header}>
-            {`${index + 1} ${response.authorName} ${response.email ? `${response.email} ` : ''}${response.dateIdBe}`}
-          </Text>
+          <View style={styles.responseHeader}>
+            <Text style={styles.responseNumber}>{`${index + 1}`}</Text>
+            <View style={styles.responseDetails}>
+              <Text style={styles.authorName}>
+                {`${response.authorName} ${response.email ? `${response.email} ` : ''}${response.dateIdBe}`}
+              </Text>
+            </View>
+          </View>
           <Text style={styles.content}>{response.content}</Text>
         </View>
       ))}
@@ -77,9 +83,19 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
   },
-  header: {
-    marginBottom: 5, // ヘッダーとコンテンツの間のマージン
-    color: 'gray', // ヘッダーのテキスト色
+  responseHeader: {
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
+  responseNumber: {
+    color: 'gray',
+    marginRight: 10, // Adjust the space between the response number and the text
+  },
+  responseDetails: {
+    flex: 1,
+  },
+  authorName: {
+    color: 'gray',
   },
   content: {
     fontSize: 16,
