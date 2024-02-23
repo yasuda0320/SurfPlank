@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native'; // Added useNavigation import
 import { RootStackParamList, ResponseContent } from './types';
 import encoding from 'encoding-japanese';
 import he from 'he';
@@ -14,10 +14,13 @@ interface ResponseListProps {
 }
 
 const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
-  const { boardUrl, datFileName } = route.params;
+  const navigation = useNavigation(); // Obtained the navigation object
+  const { boardUrl, datFileName, threadName } = route.params; // Assuming threadName is passed correctly
   const [responses, setResponses] = useState<ResponseContent[]>([]);
 
   useEffect(() => {
+    navigation.setOptions({ title: threadName }); // Set thread name as title
+
     const fetchDatContent = async () => {
       try {
         const response = await fetch(`${boardUrl}dat/${datFileName}`);
@@ -53,7 +56,7 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
     (async () => {
       await fetchDatContent();
     })();
-  }, [boardUrl, datFileName]);
+  }, [boardUrl, datFileName, navigation, threadName]); // Added threadName and navigation to dependency array
 
   return (
     <ScrollView style={styles.container}>

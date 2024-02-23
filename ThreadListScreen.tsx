@@ -64,6 +64,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           onPress={() => navigation.navigate('ResponseList', {
             boardUrl: item.url, // 板のURL
             datFileName: thread.datFileName, // 選択されたスレッドのdatファイル名
+            threadName: thread.title, // スレッド名を渡す
           })}
         />
       ))}

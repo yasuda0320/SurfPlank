@@ -29,7 +29,7 @@ export type RootStackParamList = {
   CategoryList: undefined;
   BoardList: { categoryContent: CategoryContent[]; categoryName: string }; // categoryNameを追加
   ThreadList: { item: CategoryContent };
-  ResponseList: { boardUrl: string; datFileName: string };
+  ResponseList: { boardUrl: string; datFileName: string; threadName: string }; // ここにthreadNameを追加
 };
 
 export interface ThreadInfo {
