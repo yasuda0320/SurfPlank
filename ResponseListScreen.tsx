@@ -6,6 +6,7 @@ import { RouteProp, useNavigation } from '@react-navigation/native'; // Added us
 import { RootStackParamList, ResponseContent } from './types';
 import encoding from 'encoding-japanese';
 import he from 'he';
+import CustomHeaderTitle from './CustomHeaderTitle'; // Make sure to have the correct path
 
 type ResponseListRouteProp = RouteProp<RootStackParamList, 'ResponseList'>;
 
@@ -19,7 +20,9 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
   const [responses, setResponses] = useState<ResponseContent[]>([]);
 
   useEffect(() => {
-    navigation.setOptions({ title: threadName }); // Set thread name as title
+    navigation.setOptions({
+      headerTitle: () => <CustomHeaderTitle title={threadName || 'Thread'} />,
+    });
 
     const fetchDatContent = async () => {
       try {
@@ -102,6 +105,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 16,
+    color: 'black',
   },
 });
 

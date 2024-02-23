@@ -19,6 +19,7 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="CategoryList"
         screenOptions={{
+          headerBackTitleVisible: false, // iOSで戻るボタンのテキストを非表示に
           gestureEnabled: true,
           gestureDirection: 'horizontal',
           // Use the forHorizontalIOS interpolator for a smoother swipe gesture experience

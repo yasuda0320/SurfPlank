@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     textAlign: 'left', // テキストを左寄せに設定
+    color: 'black', // テキストの色を黒に設定
   },
 });
 
