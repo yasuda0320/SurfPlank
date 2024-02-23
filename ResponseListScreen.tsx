@@ -21,30 +21,24 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
         const response = await fetch(`${boardUrl}dat/${datFileName}`);
         const arrayBuffer = await response.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
-        // Shift_JIS (SJIS) から Unicode への変換を行います。
         const resultArray = encoding.convert(uint8Array, 'UNICODE', 'SJIS');
         const decodedText = encoding.codeToString(resultArray);
 
-        // 改行コードに対応して、最後の空行を避けるために filter(Boolean) を使用
         const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n').filter(Boolean);
 
-        // レスポンス内容の解析
-        const parsedResponses = lines.map(line => {
+        const parsedResponses = lines.map((line, index) => {
           const parts = line.split('<>');
-          // <b>タグを削除してからauthorNameのHTMLエンティティをデコード
           const authorName = he.decode(parts[0].replace(/<\/?b>/g, ''));
-          // contentの加工: <br>を改行に置き換え、デコード後に各行の先頭と末尾のスペースを削除
           const contentLines = he.decode(parts[3].replace(/<br>/g, '\n'))
             .split('\n')
-            .map(contentLine => contentLine.replace(/^ | $/g, '')); // 先頭と末尾のスペースを削除
+            .map(contentLine => contentLine.replace(/^ | $/g, ''));
           const processedContent = contentLines.join('\n');
 
           return {
-            authorName: authorName,
-            email: parts[1], // emailはデコード不要
-            dateIdBe: parts[2], // dateIdBeはデコード不要
-            content: processedContent, // contentのHTMLエンティティをデコード
-            // threadTitleはレス一覧には含まれないため、ここでは扱わない
+            authorName: `${index + 1} ${authorName}`, // レス番号を追加
+            email: parts[1],
+            dateIdBe: parts[2],
+            content: processedContent,
           };
         });
 
