@@ -26,7 +26,7 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
 
         const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n').filter(Boolean);
 
-        const parsedResponses = lines.map((line, index) => {
+        const parsedResponses = lines.map((line) => {
           const parts = line.split('<>');
           const authorName = he.decode(parts[0].replace(/<\/?b>/g, ''));
           const contentLines = he.decode(parts[3].replace(/<br>/g, '\n'))
@@ -35,7 +35,7 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
           const processedContent = contentLines.join('\n');
 
           return {
-            authorName: `${index + 1} ${authorName}`, // レス番号を追加
+            authorName: authorName,
             email: parts[1],
             dateIdBe: parts[2],
             content: processedContent,
@@ -57,8 +57,10 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
     <ScrollView style={styles.container}>
       {responses.map((response, index) => (
         <View key={index} style={styles.response}>
-          <Text style={styles.authorName}>{response.authorName}</Text>
-          <Text style={styles.dateIdBe}>{response.dateIdBe}</Text>
+          {/* レス番号、authorName、email、dateIdBeを同じ行に表示 */}
+          <Text style={styles.header}>
+            {`${index + 1} ${response.authorName} ${response.email ? `${response.email} ` : ''}${response.dateIdBe}`}
+          </Text>
           <Text style={styles.content}>{response.content}</Text>
         </View>
       ))}
@@ -73,18 +75,13 @@ const styles = StyleSheet.create({
   response: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: 'lightgray', // 色名で指定
+    borderBottomColor: 'lightgray',
   },
-  authorName: {
-    fontSize: 12, // 少し小さめのサイズ
-    color: 'gray', // 薄い色に変更
-  },
-  dateIdBe: {
-    fontSize: 12, // 少し小さめのサイズ
-    color: 'gray', // 薄い色に変更
+  header: {
+    marginBottom: 5, // ヘッダーとコンテンツの間のマージン
+    color: 'gray', // ヘッダーのテキスト色
   },
   content: {
-    marginTop: 5,
     fontSize: 16,
   },
 });
