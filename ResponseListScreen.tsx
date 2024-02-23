@@ -79,18 +79,19 @@ const styles = StyleSheet.create({
   response: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: 'lightgray', // 色名で指定
   },
   authorName: {
     fontSize: 12, // 少し小さめのサイズ
+    color: 'gray', // 薄い色に変更
   },
   dateIdBe: {
     fontSize: 12, // 少し小さめのサイズ
+    color: 'gray', // 薄い色に変更
   },
   content: {
     marginTop: 5,
     fontSize: 16,
-    fontWeight: 'bold', // コンテンツにボールドを指定
   },
 });
 
