@@ -1,9 +1,9 @@
 // ResponseListScreen.tsx
 
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { RouteProp, useNavigation } from '@react-navigation/native'; // Added useNavigation import
-import { RootStackParamList, ResponseContent } from './types';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
+import {RouteProp, useNavigation} from '@react-navigation/native'; // Added useNavigation import
+import {RootStackParamList, ResponseContent} from './types';
 import encoding from 'encoding-japanese';
 import he from 'he';
 import CustomHeaderTitle from './CustomHeaderTitle'; // Make sure to have the correct path
@@ -14,9 +14,9 @@ interface ResponseListProps {
   route: ResponseListRouteProp;
 }
 
-const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
+const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
   const navigation = useNavigation(); // Obtained the navigation object
-  const { boardUrl, datFileName, threadName } = route.params; // Assuming threadName is passed correctly
+  const {boardUrl, datFileName, threadName} = route.params; // Assuming threadName is passed correctly
   const [responses, setResponses] = useState<ResponseContent[]>([]);
 
   useEffect(() => {
@@ -32,12 +32,16 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
         const resultArray = encoding.convert(uint8Array, 'UNICODE', 'SJIS');
         const decodedText = encoding.codeToString(resultArray);
 
-        const lines = decodedText.replace(/\r\n|\r|\n/g, '\n').split('\n').filter(Boolean);
+        const lines = decodedText
+          .replace(/\r\n|\r|\n/g, '\n')
+          .split('\n')
+          .filter(Boolean);
 
-        const parsedResponses = lines.map((line) => {
+        const parsedResponses = lines.map(line => {
           const parts = line.split('<>');
           const authorName = he.decode(parts[0].replace(/<\/?b>/g, ''));
-          const contentLines = he.decode(parts[3].replace(/<br>/g, '\n'))
+          const contentLines = he
+            .decode(parts[3].replace(/<br>/g, '\n'))
             .split('\n')
             .map(contentLine => contentLine.replace(/^ | $/g, ''));
           const processedContent = contentLines.join('\n');
@@ -61,6 +65,24 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
     })();
   }, [boardUrl, datFileName, navigation, threadName]); // Added threadName and navigation to dependency array
 
+  const renderContentWithImages = content => {
+    const imageRegex = /https?:\/\/\S+\.(jpg|jpeg|png|gif)/gi;
+    const parts = content.split(/(https?:\/\/\S+\.(?:jpg|jpeg|png|gif))/gi);
+    return parts.map((part, index) => {
+      if (part.match(imageRegex)) {
+        return (
+          <Image key={index} source={{uri: part}} style={styles.inlineImage} />
+        );
+      } else {
+        return (
+          <Text key={index} style={styles.contentText}>
+            {part}
+          </Text>
+        );
+      }
+    });
+  };
+
   return (
     <ScrollView style={styles.container}>
       {responses.map((response, index) => (
@@ -69,11 +91,13 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({ route }) => {
             <Text style={styles.responseNumber}>{`${index + 1}`}</Text>
             <View style={styles.responseDetails}>
               <Text style={styles.authorName}>
-                {`${response.authorName} ${response.email ? `${response.email} ` : ''}${response.dateIdBe}`}
+                {`${response.authorName} ${
+                  response.email ? `${response.email} ` : ''
+                }${response.dateIdBe}`}
               </Text>
             </View>
           </View>
-          <Text style={styles.content}>{response.content}</Text>
+          <View>{renderContentWithImages(response.content)}</View>
         </View>
       ))}
     </ScrollView>
@@ -106,6 +130,15 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   content: {
+    fontSize: 16,
+    color: 'black',
+  },
+  inlineImage: {
+    width: 100, // Set appropriate width
+    height: 100, // Set appropriate height
+    resizeMode: 'contain', // Ensure the image fits in the dimensions
+  },
+  contentText: {
     fontSize: 16,
     color: 'black',
   },
