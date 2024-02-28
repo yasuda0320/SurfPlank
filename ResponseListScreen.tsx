@@ -1,12 +1,12 @@
 // ResponseListScreen.tsx
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView, Image} from 'react-native';
-import {RouteProp, useNavigation} from '@react-navigation/native'; // Added useNavigation import
+import {View, Text, StyleSheet, ScrollView, Image, Modal, TouchableOpacity} from 'react-native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList, ResponseContent} from './types';
 import encoding from 'encoding-japanese';
 import he from 'he';
-import CustomHeaderTitle from './CustomHeaderTitle'; // Make sure to have the correct path
+import CustomHeaderTitle from './CustomHeaderTitle';
 
 type ResponseListRouteProp = RouteProp<RootStackParamList, 'ResponseList'>;
 
@@ -15,9 +15,11 @@ interface ResponseListProps {
 }
 
 const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
-  const navigation = useNavigation(); // Obtained the navigation object
-  const {boardUrl, datFileName, threadName} = route.params; // Assuming threadName is passed correctly
+  const navigation = useNavigation();
+  const {boardUrl, datFileName, threadName} = route.params;
   const [responses, setResponses] = useState<ResponseContent[]>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -65,13 +67,20 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
     })();
   }, [boardUrl, datFileName, navigation, threadName]); // Added threadName and navigation to dependency array
 
-  const renderContentWithImages = content => {
+  const renderContentWithImages = (content: string) => {
     const imageRegex = /https?:\/\/\S+\.(jpg|jpeg|png|gif)/gi;
     const parts = content.split(/(https?:\/\/\S+\.(?:jpg|jpeg|png|gif))/gi);
     return parts.map((part, index) => {
       if (part.match(imageRegex)) {
         return (
-          <Image key={index} source={{uri: part}} style={styles.inlineImage} />
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              setSelectedImage(part);
+              setModalVisible(true);
+            }}>
+            <Image source={{uri: part}} style={styles.inlineImage} />
+          </TouchableOpacity>
         );
       } else {
         return (
@@ -84,23 +93,40 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {responses.map((response, index) => (
-        <View key={index} style={styles.response}>
-          <View style={styles.responseHeader}>
-            <Text style={styles.responseNumber}>{`${index + 1}`}</Text>
-            <View style={styles.responseDetails}>
-              <Text style={styles.authorName}>
-                {`${response.authorName} ${
-                  response.email ? `${response.email} ` : ''
-                }${response.dateIdBe}`}
-              </Text>
+    <>
+      <ScrollView style={styles.container}>
+        {responses.map((response, index) => (
+          <View key={index} style={styles.response}>
+            <View style={styles.responseHeader}>
+              <Text style={styles.responseNumber}>{`${index + 1}`}</Text>
+              <View style={styles.responseDetails}>
+                <Text style={styles.authorName}>
+                  {`${response.authorName} ${
+                    response.email ? `${response.email} ` : ''
+                  }${response.dateIdBe}`}
+                </Text>
+              </View>
             </View>
+            <View>{renderContentWithImages(response.content)}</View>
           </View>
-          <View>{renderContentWithImages(response.content)}</View>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+      {selectedImage && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <TouchableOpacity
+            style={styles.centeredView}
+            onPress={() => setModalVisible(!modalVisible)}>
+            <Image source={{uri: selectedImage}} style={styles.fullSizeImage} />
+          </TouchableOpacity>
+        </Modal>
+      )}
+    </>
   );
 };
 
@@ -133,10 +159,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+  },
+  fullSizeImage: {
+    width: '90%',
+    height: '80%',
+    resizeMode: 'contain',
+  },
   inlineImage: {
-    width: 100, // Set appropriate width
-    height: 100, // Set appropriate height
-    resizeMode: 'contain', // Ensure the image fits in the dimensions
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
   },
   contentText: {
     fontSize: 16,
