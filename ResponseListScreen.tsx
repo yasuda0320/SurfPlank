@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   responseNumber: {
+    fontSize: 10,
     color: 'gray',
     marginRight: 10, // Adjust the space between the response number and the text
   },
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   authorName: {
+    fontSize: 10,
     color: 'gray',
   },
   content: {
