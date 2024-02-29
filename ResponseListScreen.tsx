@@ -113,7 +113,7 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
       </ScrollView>
       {selectedImage && (
         <Modal
-          animationType="slide"
+          animationType="none"
           transparent={true}
           visible={modalVisible}
           onRequestClose={() => {
