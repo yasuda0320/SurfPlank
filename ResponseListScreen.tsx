@@ -1,7 +1,7 @@
 // ResponseListScreen.tsx
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView, Image, Modal, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Image, Modal, TouchableOpacity, Linking} from 'react-native';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamList, ResponseContent} from './types';
 import encoding from 'encoding-japanese';
@@ -72,18 +72,35 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
     let images: string[] = [];
     let textContent = content.replace(imageRegex, (match) => {
       images.push(match);
-      return '';
+      return ` ${match} `;
     }).trim();
 
     return (
       <>
-        <Text style={styles.contentText}>{textContent}</Text>
+        <Text style={styles.contentText}>
+          {textContent.split(' ').map((part, index) => {
+            if (part.match(imageRegex)) {
+              return (
+                <Text
+                  key={index}
+                  onPress={() => Linking.openURL(part)}
+                  style={styles.link}>
+                  {part + " "}
+                </Text>
+              );
+            } else {
+              return part + ' ';
+            }
+          })}
+        </Text>
         <View style={styles.imagesContainer}>
           {images.map((imageSrc, index) => (
-            <TouchableOpacity key={index} onPress={() => {
-              setSelectedImage(imageSrc);
-              setModalVisible(true);
-            }}>
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                setSelectedImage(imageSrc);
+                setModalVisible(true);
+              }}>
               <Image source={{ uri: imageSrc }} style={styles.inlineImage} />
             </TouchableOpacity>
           ))}
@@ -163,7 +180,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.8)',
+    backgroundColor: 'rgba(0,0,0,1)',
   },
   fullSizeImage: {
     width: '90%',
@@ -186,6 +203,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginRight: 5, // 画像同士の間隔
     marginBottom: 5,
+  },
+  link: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
 
