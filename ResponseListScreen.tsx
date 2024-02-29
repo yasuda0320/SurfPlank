@@ -69,27 +69,27 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
 
   const renderContentWithImages = (content: string) => {
     const imageRegex = /https?:\/\/\S+\.(jpg|jpeg|png|gif)/gi;
-    const parts = content.split(/(https?:\/\/\S+\.(?:jpg|jpeg|png|gif))/gi);
-    return parts.map((part, index) => {
-      if (part.match(imageRegex)) {
-        return (
-          <TouchableOpacity
-            key={index}
-            onPress={() => {
-              setSelectedImage(part);
+    let images: string[] = [];
+    let textContent = content.replace(imageRegex, (match) => {
+      images.push(match);
+      return '';
+    }).trim();
+
+    return (
+      <>
+        <Text style={styles.contentText}>{textContent}</Text>
+        <View style={styles.imagesContainer}>
+          {images.map((imageSrc, index) => (
+            <TouchableOpacity key={index} onPress={() => {
+              setSelectedImage(imageSrc);
               setModalVisible(true);
             }}>
-            <Image source={{uri: part}} style={styles.inlineImage} />
-          </TouchableOpacity>
-        );
-      } else {
-        return (
-          <Text key={index} style={styles.contentText}>
-            {part}
-          </Text>
-        );
-      }
-    });
+              <Image source={{ uri: imageSrc }} style={styles.inlineImage} />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </>
+    );
   };
 
   return (
@@ -170,14 +170,22 @@ const styles = StyleSheet.create({
     height: '80%',
     resizeMode: 'contain',
   },
-  inlineImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
   contentText: {
     fontSize: 16,
     color: 'black',
+  },
+  imagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start', // 画像が左詰めで表示されるように
+    marginTop: 10, // テキストコンテンツと画像の間に余白を設ける
+  },
+  inlineImage: {
+    width: 100, // 画像のサイズ調整
+    height: 100,
+    resizeMode: 'contain',
+    marginRight: 5, // 画像同士の間隔
+    marginBottom: 5,
   },
 });
 
