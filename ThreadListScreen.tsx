@@ -38,10 +38,10 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           // parts[1]がundefinedの場合は空文字列''を使用
           const rawTitle = parts[1] || '';
           const decodedTitle = he.decode(rawTitle);
-          // スレッド名、スレッドID、レス数を抽出
-          const titleMatch = decodedTitle.match(/^(.*) {2}\[([^\]]+)] \(([^)]+)\)$/);
-          const title = titleMatch ? titleMatch[1] : decodedTitle;
-          const threadId = titleMatch ? titleMatch[2] : '';
+          // 空白の有無を考慮した正規表現の修正
+          const titleMatch = decodedTitle.match(/^(.*?)(?: *\[([^\]]+)] *)?\(([^)]+)\)$/);
+          const title = titleMatch ? titleMatch[1].trim() : decodedTitle; // タイトルの後ろの空白を削除
+          const threadId = titleMatch && titleMatch[2] ? titleMatch[2] : '';
           const responseCount = titleMatch ? titleMatch[3] : '';
           return { datFileName, title, threadId, responseCount }; // スレッドIDとレス数を追加
         }).filter(thread => thread.title && thread.datFileName);
@@ -63,7 +63,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
       {threads.map((thread, index) => (
         <GridItem
           key={index}
-          name={`${thread.title} [${thread.threadId}] (${thread.responseCount})`} // GridItemにスレッド名、ID、レス数を表示
+          name={thread.title}
           isFirstRow={index === 0}
           isLeftCell={false} // 1行に1カラムのため、常にfalse
           onPress={() => navigation.navigate('ResponseList', {
@@ -71,6 +71,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
             datFileName: thread.datFileName, // 選択されたスレッドのdatファイル名
             threadName: thread.title, // スレッド名を渡す
           })}
+          footerContent={{ threadId: thread.threadId, responseCount: thread.responseCount }}
         />
       ))}
     </ScrollView>
