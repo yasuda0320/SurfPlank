@@ -85,7 +85,7 @@ const ResponseListScreen: React.FC<ResponseListProps> = ({route}) => {
                   key={index}
                   onPress={() => Linking.openURL(part)}
                   style={styles.link}>
-                  {part + " "}
+                  {part + ' '}
                 </Text>
               );
             } else {
