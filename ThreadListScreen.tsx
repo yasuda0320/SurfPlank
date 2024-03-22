@@ -37,8 +37,13 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           const datFileName = parts[0];
           // parts[1]がundefinedの場合は空文字列''を使用
           const rawTitle = parts[1] || '';
-          const title = he.decode(rawTitle); // HTMLエンティティをデコード
-          return { datFileName, title };
+          const decodedTitle = he.decode(rawTitle);
+          // スレッド名、スレッドID、レス数を抽出
+          const titleMatch = decodedTitle.match(/^(.*) {2}\[([^\]]+)] \(([^)]+)\)$/);
+          const title = titleMatch ? titleMatch[1] : decodedTitle;
+          const threadId = titleMatch ? titleMatch[2] : '';
+          const responseCount = titleMatch ? titleMatch[3] : '';
+          return { datFileName, title, threadId, responseCount }; // スレッドIDとレス数を追加
         }).filter(thread => thread.title && thread.datFileName);
 
         setThreads(threadInfos);
@@ -58,7 +63,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
       {threads.map((thread, index) => (
         <GridItem
           key={index}
-          name={thread.title}
+          name={`${thread.title} [${thread.threadId}] (${thread.responseCount})`} // GridItemにスレッド名、ID、レス数を表示
           isFirstRow={index === 0}
           isLeftCell={false} // 1行に1カラムのため、常にfalse
           onPress={() => navigation.navigate('ResponseList', {

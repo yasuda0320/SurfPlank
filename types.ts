@@ -35,6 +35,8 @@ export type RootStackParamList = {
 export interface ThreadInfo {
   datFileName: string; // .datファイル名
   title: string; // スレッドのタイトル
+  threadId: string; // スレッドID
+  responseCount: string; // レス数
 }
 
 export interface ResponseContent {
