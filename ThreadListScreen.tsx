@@ -9,6 +9,7 @@ import GridItem from './GridItem';
 import encoding from 'encoding-japanese';
 import he from 'he';
 import moment from 'moment-timezone'; // moment-timezoneをインポート
+import 'moment/locale/ja'; // 日本語のロケールをインポート
 
 type ThreadListScreenRouteProp = RouteProp<RootStackParamList, 'ThreadList'>;
 type ThreadListScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -18,7 +19,7 @@ interface ThreadListScreenProps {
 }
 
 const convertUnixTimeToJST = (unixTime: number) => {
-  return moment(unixTime * 1000).tz('Asia/Tokyo').format('M/D(ddd) HH:mm');
+  return moment(unixTime * 1000).tz('Asia/Tokyo').locale('ja').format('M/D(ddd) HH:mm');
 };
 
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
