@@ -8,6 +8,7 @@ import { RootStackParamList, ThreadInfo } from './types';
 import GridItem from './GridItem';
 import encoding from 'encoding-japanese';
 import he from 'he';
+import moment from 'moment-timezone'; // moment-timezoneをインポート
 
 type ThreadListScreenRouteProp = RouteProp<RootStackParamList, 'ThreadList'>;
 type ThreadListScreenNavigationProp = StackNavigationProp<RootStackParamList>;
@@ -15,6 +16,10 @@ type ThreadListScreenNavigationProp = StackNavigationProp<RootStackParamList>;
 interface ThreadListScreenProps {
   route: ThreadListScreenRouteProp;
 }
+
+const convertUnixTimeToJST = (unixTime: number) => {
+  return moment(unixTime * 1000).tz('Asia/Tokyo').format('M/D(ddd) HH:mm');
+};
 
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
   const [threads, setThreads] = useState<ThreadInfo[]>([]);
@@ -43,7 +48,8 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           const title = titleMatch ? titleMatch[1].trim() : decodedTitle; // タイトルの後ろの空白を削除
           const threadId = titleMatch && titleMatch[2] ? titleMatch[2] : '';
           const responseCount = titleMatch ? titleMatch[3] : '';
-          return { datFileName, title, threadId, responseCount }; // スレッドIDとレス数を追加
+          const createdAt = convertUnixTimeToJST(parseInt(datFileName, 10)); // Unix時間をJSTに変換
+          return { datFileName, title, threadId, responseCount, createdAt };
         }).filter(thread => thread.title && thread.datFileName);
 
         setThreads(threadInfos);
@@ -71,7 +77,7 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
             datFileName: thread.datFileName, // 選択されたスレッドのdatファイル名
             threadName: thread.title, // スレッド名を渡す
           })}
-          footerContent={{ threadId: thread.threadId, responseCount: thread.responseCount }}
+          footerContent={{ createdAt: thread.createdAt, threadId: thread.threadId, responseCount: thread.responseCount }} // スレッド作成日時を追加
         />
       ))}
     </ScrollView>

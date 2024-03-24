@@ -37,6 +37,7 @@ export interface ThreadInfo {
   title: string; // スレッドのタイトル
   threadId: string; // スレッドID
   responseCount: string; // レス数
+  createdAt: string; // スレッド作成日時
 }
 
 export interface ResponseContent {

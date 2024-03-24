@@ -9,6 +9,7 @@ interface GridItemProps {
   isLeftCell: boolean; // 左側のセルかどうか
   onPress: () => void; // タップ時のイベントハンドラ
   footerContent?: {
+    createdAt: string;
     threadId: string;
     responseCount: string;
   };
@@ -33,7 +34,7 @@ const GridItem: React.FC<GridItemProps> = ({
       <Text style={styles.itemText}>{name}</Text>
       {footerContent && (
         <View style={styles.footer}>
-          <Text style={styles.footerText}>{footerContent.threadId}</Text>
+          <Text style={styles.footerText}>{footerContent.createdAt} {footerContent.threadId}</Text>
           <Text style={styles.footerText}>{footerContent.responseCount}</Text>
         </View>
       )}
