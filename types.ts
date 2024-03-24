@@ -38,6 +38,7 @@ export interface ThreadInfo {
   threadId: string; // スレッドID
   responseCount: string; // レス数
   createdAt: string; // スレッド作成日時
+  momentum: string; // 勢い
 }
 
 export interface ResponseContent {

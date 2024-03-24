@@ -11,6 +11,7 @@ interface GridItemProps {
   footerContent?: {
     createdAt: string;
     threadId: string;
+    momentum: string;
     responseCount: string;
   };
 }
@@ -35,7 +36,7 @@ const GridItem: React.FC<GridItemProps> = ({
       {footerContent && (
         <View style={styles.footer}>
           <Text style={styles.footerText}>{footerContent.createdAt} {footerContent.threadId}</Text>
-          <Text style={styles.footerText}>{footerContent.responseCount}</Text>
+          <Text style={styles.footerText}>{footerContent.momentum}   {footerContent.responseCount}</Text>
         </View>
       )}
     </TouchableOpacity>

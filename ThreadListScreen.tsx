@@ -22,6 +22,14 @@ const convertUnixTimeToJST = (unixTime: number) => {
   return moment(unixTime * 1000).tz('Asia/Tokyo').locale('ja').format('M/D(ddd) HH:mm');
 };
 
+const calculateThreadMomentum = (createdAt: string, responseCount: string) => {
+  const createdMoment = moment(createdAt, 'M/D(ddd) HH:mm');
+  const currentMoment = moment();
+  const daysDiff = currentMoment.diff(createdMoment, 'days', true);
+  const momentum = parseFloat(responseCount) / daysDiff;
+  return momentum.toFixed(1);
+};
+
 const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
   const [threads, setThreads] = useState<ThreadInfo[]>([]);
   const { item } = route.params;
@@ -50,7 +58,8 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
           const threadId = titleMatch && titleMatch[2] ? titleMatch[2] : '';
           const responseCount = titleMatch ? titleMatch[3] : '';
           const createdAt = convertUnixTimeToJST(parseInt(datFileName, 10)); // Unix時間をJSTに変換
-          return { datFileName, title, threadId, responseCount, createdAt };
+          const momentum = calculateThreadMomentum(createdAt, responseCount); // スレッドの勢いを計算
+          return { datFileName, title, threadId, responseCount, createdAt, momentum };
         }).filter(thread => thread.title && thread.datFileName);
 
         setThreads(threadInfos);
@@ -78,7 +87,12 @@ const ThreadListScreen: React.FC<ThreadListScreenProps> = ({ route }) => {
             datFileName: thread.datFileName, // 選択されたスレッドのdatファイル名
             threadName: thread.title, // スレッド名を渡す
           })}
-          footerContent={{ createdAt: thread.createdAt, threadId: thread.threadId, responseCount: thread.responseCount }} // スレッド作成日時を追加
+          footerContent={{
+            createdAt: thread.createdAt,
+            threadId: thread.threadId,
+            momentum: thread.momentum, // スレッドの勢いを追加
+            responseCount: thread.responseCount,
+          }}
         />
       ))}
     </ScrollView>
