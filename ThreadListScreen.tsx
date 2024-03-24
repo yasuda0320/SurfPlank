@@ -27,6 +27,9 @@ const calculateThreadMomentum = (createdAt: string, responseCount: string) => {
   const currentMoment = moment();
   const daysDiff = currentMoment.diff(createdMoment, 'days', true);
   const momentum = parseFloat(responseCount) / daysDiff;
+  if (isNaN(momentum) || !isFinite(momentum)) {
+    return '0.0';
+  }
   return momentum.toFixed(1);
 };
 
