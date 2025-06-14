@@ -11,7 +11,7 @@ const CustomHeaderTitle: React.FC<CustomHeaderTitleProps> = ({ title }) => {
   return (
     <View style={styles.container}>
       {/* numberOfLinesを2に設定して2行表示を可能にします */}
-      <Text style={styles.title} numberOfLines={2} ellipsizeMode='tail'>{title}</Text>
+      <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{title}</Text>
     </View>
   );
 };
